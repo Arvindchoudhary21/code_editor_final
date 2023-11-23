@@ -41,6 +41,15 @@ io.on('connection', (socket) => {
         })
     })
 
+
+
+    // for code change on all rooms 
+    socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
+        socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });//sending to client the code received on server and used socket.in because we have to brodcast all the code to other users not to myself that's why io.to was working incorrectly
+    });
+
+
+
     // for disonnection
     socket.on('disconnecting', () => {
         // get all socket rooms
