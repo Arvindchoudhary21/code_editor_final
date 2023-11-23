@@ -68,7 +68,7 @@ function Home() {
                 </div>
             </div>
             <footer>
-                <h4>Built by group 11</h4>
+                <h4>Built by IT</h4>
             </footer>
         </div>
     )
