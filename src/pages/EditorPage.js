@@ -9,6 +9,7 @@ import { useNavigate, Navigate, useParams } from 'react-router-dom';
 function EditorPage() {
 
     const socketRef = useRef(null);
+    const codeRef = useRef(null) //for syncing the code in real time
     const location = useLocation();
     const reactNavigator = useNavigate()
     const { roomId } = useParams(); // because in app.js we set path as /editor/:roomId
@@ -44,6 +45,12 @@ function EditorPage() {
                     console.log(`${username} joined`);
                 }
                 setClients(clients);
+                // logic for when user joins room then he can see the previous code written before joining
+                socketRef.current.emit(ACTIONS.SYNC_CODE, {
+                    code: codeRef.current,
+                    socketId,
+                    //sending the code and socketId to the server.js the server will pass the code to the joined user 
+                })
             })
 
             //Listening for disconnected
@@ -66,6 +73,24 @@ function EditorPage() {
         }
 
     }, [])
+
+
+    // function to copy the room id
+    async function copyRoomId() {
+        try {
+            await navigator.clipboard.writeText(roomId);
+            toast.success('Room ID has been copied to your clip board');
+        } catch (err) {
+            toast.error('Could not copy the room ID');
+            console.log(err);
+        }
+    }
+
+
+    // function to leave the room 
+    function leaveRoom() {
+        reactNavigator('/');
+    }
 
 
 
@@ -97,11 +122,15 @@ function EditorPage() {
                         }
                     </div>
                 </div>
-                <button className='btn copyBtn'>Copy ROOM ID</button>
-                <button className='btn leaveBtn'>Leave</button>
+                <button className='btn copyBtn' onClick={copyRoomId}>Copy ROOM ID</button>
+                <button className='btn leaveBtn' onClick={leaveRoom}>Leave</button>
             </div>
             <div className='editorWrap'>
-                <Editor socketRef={socketRef} roomId={roomId} />
+                <Editor
+                    socketRef={socketRef}
+                    roomId={roomId}
+                    onCodeChange={(code) => { codeRef.current = code; }} //execute when called in editor.js
+                />
             </div>
         </div>
     )

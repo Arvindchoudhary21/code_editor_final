@@ -7,7 +7,7 @@ import 'codemirror/addon/edit/closetag'
 import 'codemirror/addon/edit/closebrackets'
 import ACTIONS from '../Actions'
 
-function Editor({ socketRef, roomId }) {
+function Editor({ socketRef, roomId, onCodeChange }) {
 
     // we have to store the reference of the editor 
     const editorRef = useRef(null);
@@ -28,8 +28,9 @@ function Editor({ socketRef, roomId }) {
 
                 // storing all code written in editor
                 let code = instance.getValue();
+                onCodeChange(code); //passing the code and execute the function and this function will be execute in EditorPage.js line 128
 
-                console.log(code); // receiving all the text in console
+                // console.log(code); // receiving all the text in console
                 if (origin !== 'setValue') {
                     // sending this event on server.js
                     socketRef.current.emit(ACTIONS.CODE_CHANGE, {
@@ -53,6 +54,11 @@ function Editor({ socketRef, roomId }) {
                     editorRef.current.setValue(code)
                 }
             })
+        }
+
+        // unsubscribe the code_change method
+        return () => {
+            socketRef.current.off(ACTIONS.CODE_CHANGE);
         }
 
     }, [socketRef.current])

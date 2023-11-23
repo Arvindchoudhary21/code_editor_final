@@ -49,6 +49,12 @@ io.on('connection', (socket) => {
     });
 
 
+    // for code sync on all rooms 
+    socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
+        io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });//sending code to only client who is just joined the room because the user wants the previous written code that's why doing this
+    });
+
+
 
     // for disonnection
     socket.on('disconnecting', () => {
