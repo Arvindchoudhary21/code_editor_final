@@ -42,7 +42,7 @@ function EditorPage() {
                 if (username !== location.state?.username) {
                     // dont notify when myself joins the room ok
                     toast.success(`${username} joined the room.`)
-                    console.log(`${username} joined`);
+                    // console.log(`${username} joined`);
                 }
                 setClients(clients);
                 // logic for when user joins room then he can see the previous code written before joining

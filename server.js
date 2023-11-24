@@ -20,7 +20,7 @@ function getAllConnectedClients(roomId) {
 }
 
 io.on('connection', (socket) => {
-    console.log('socket connected', socket.id);
+    // console.log('socket connected', socket.id);
 
     // get the parameter sent from EditorPage.js
     socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
         socket.join(roomId);
         // if already some user are availabe in the room then get list of clients connected in the room
         const clients = getAllConnectedClients(roomId);
-        console.log(clients); //log in terminal -> all the clients connected in a room 
+        // console.log(clients); //log in terminal -> all the clients connected in a room 
 
         // send this information to frontend(EditorPage.js) to update the ui of editor page
         clients.forEach(({ socketId }) => {
